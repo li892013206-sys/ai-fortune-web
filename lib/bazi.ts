@@ -600,13 +600,13 @@ export function calculateBaZi(
   const lunar = solar.getLunar();
   const baZi = lunar.getEightChar();
 
-  // 获取四柱
-  const yearGanZhi = baZi.getYearGanZhi();
-  const monthGanZhi = baZi.getMonthGanZhi();
-  const dayGanZhi = baZi.getDayGanZhi();
-  const hourGanZhi = baZi.getTimeGanZhi();
+  // 获取四柱（使用正确的方法）
+  const yearGanZhi = baZi.getYearGan() + baZi.getYearZhi();
+  const monthGanZhi = baZi.getMonthGan() + baZi.getMonthZhi();
+  const dayGanZhi = baZi.getDayGan() + baZi.getDayZhi();
+  const hourGanZhi = baZi.getTimeGan() + baZi.getTimeZhi();
 
-  const dayGan = dayGanZhi.charAt(0);
+  const dayGan = baZi.getDayGan();
 
   // 构建四柱对象
   const createPillar = (ganZhi: string, nayin: string): BaZiPillar => {

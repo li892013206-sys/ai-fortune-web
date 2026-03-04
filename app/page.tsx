@@ -149,7 +149,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* 顶部装饰 */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500" />
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-slate-400/30 via-slate-300/30 to-slate-400/30" />
 
       <div className="container mx-auto px-4 py-8">
         {/* 标题 */}
@@ -158,7 +158,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 mb-2">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-200 mb-2">
             AI 命理大师
           </h1>
           <p className="text-gray-400">传统八字 × 人工智能 · 洞察命运玄机</p>
@@ -168,7 +168,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 mb-8 border border-amber-500/20 shadow-2xl"
+          className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 mb-8 border border-white/10 shadow-2xl"
         >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
@@ -180,7 +180,7 @@ export default function Home() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-slate-400/50 transition-colors"
                 placeholder="请输入姓名"
               />
             </div>
@@ -194,7 +194,7 @@ export default function Home() {
                   onClick={() => setGender('男')}
                   className={`flex-1 py-2 rounded-lg font-medium transition-all ${
                     gender === '男'
-                      ? 'bg-amber-600 text-white'
+                      ? 'bg-slate-400/20 text-white'
                       : 'bg-slate-700/50 text-gray-400 hover:bg-slate-700'
                   }`}
                 >
@@ -204,7 +204,7 @@ export default function Home() {
                   onClick={() => setGender('女')}
                   className={`flex-1 py-2 rounded-lg font-medium transition-all ${
                     gender === '女'
-                      ? 'bg-amber-600 text-white'
+                      ? 'bg-slate-400/20 text-white'
                       : 'bg-slate-700/50 text-gray-400 hover:bg-slate-700'
                   }`}
                 >
@@ -222,7 +222,7 @@ export default function Home() {
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-slate-400/50 transition-colors"
               />
             </div>
 
@@ -235,7 +235,7 @@ export default function Home() {
                 type="time"
                 value={birthTime}
                 onChange={(e) => setBirthTime(e.target.value)}
-                className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-slate-400/50 transition-colors"
               />
             </div>
           </div>
@@ -243,7 +243,7 @@ export default function Home() {
           <button
             onClick={handleAnalyze}
             disabled={isLoading}
-            className="w-full mt-6 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold py-3 rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full mt-6 bg-gradient-to-r from-slate-400/20 to-slate-500/20 hover:from-slate-400/30 hover:to-slate-500/30 text-white font-semibold py-3 rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
@@ -314,7 +314,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <Sparkles className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+            <Sparkles className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <p className="text-gray-400 text-lg">填写信息，开启命理之旅</p>
           </motion.div>
         )}
