@@ -193,7 +193,7 @@ function calculateWuxingScore(pillars: BaZiPillar[], monthZhi: string): { 金: n
     let ganWeight = 3;
     // 月干权重加倍
     if (index === 1) ganWeight = 4;
-    score[pillar.ganWuxing] += ganWeight;
+    score[pillar.ganWuxing as keyof typeof score] += ganWeight;
 
     // 地支得分 (基础权重 2)
     let zhiWeight = 2;
@@ -201,7 +201,7 @@ function calculateWuxingScore(pillars: BaZiPillar[], monthZhi: string): { 金: n
     if (index === 1 && monthSeason) {
       zhiWeight = monthSeason.strength;
     }
-    score[pillar.zhiWuxing] += zhiWeight;
+    score[pillar.zhiWuxing as keyof typeof score] += zhiWeight;
 
     // 藏干得分（根据权重表）
     const weights = CANGGAN_WEIGHT[pillar.zhi] || [1.0];
@@ -211,7 +211,7 @@ function calculateWuxingScore(pillars: BaZiPillar[], monthZhi: string): { 金: n
         const weight = weights[cangIndex] || 0.1;
         // 月令藏干权重加倍
         const finalWeight = index === 1 ? weight * 1.5 : weight;
-        score[wuxing] += finalWeight;
+        score[wuxing as keyof typeof score] += finalWeight;
       }
     });
   });
