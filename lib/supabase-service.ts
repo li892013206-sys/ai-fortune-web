@@ -40,6 +40,13 @@ export async function saveBaziRecord(data: {
   };
 }): Promise<{ success: boolean; error?: string; recordId?: string }> {
   try {
+    if (!supabase) {
+      return {
+        success: false,
+        error: 'Supabase 未配置',
+      };
+    }
+
     // 获取当前用户（如果已登录）
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -109,6 +116,13 @@ export async function getHistoryRecords(): Promise<{
   error?: string;
 }> {
   try {
+    if (!supabase) {
+      return {
+        success: false,
+        error: 'Supabase 未配置',
+      };
+    }
+
     // 获取当前用户
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -163,6 +177,13 @@ export async function deleteBaziRecord(recordId: string): Promise<{
   error?: string;
 }> {
   try {
+    if (!supabase) {
+      return {
+        success: false,
+        error: 'Supabase 未配置',
+      };
+    }
+
     const { error } = await supabase
       .from('bazi_records')
       .delete()

@@ -118,6 +118,11 @@ export default function Home() {
     setIsSaving(true);
 
     try {
+      if (!supabase) {
+        alert('Supabase 未配置，无法保存');
+        return;
+      }
+
       const { data, error } = await supabase.from('bazi_records').insert([
         {
           name,

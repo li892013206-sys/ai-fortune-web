@@ -74,6 +74,8 @@ export default function ChatPage() {
 
   // 检查用户登录状态
   useEffect(() => {
+    if (!supabase) return;
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
@@ -312,6 +314,7 @@ export default function ChatPage() {
 
   // 登出
   const handleSignOut = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
   };
 
@@ -866,6 +869,11 @@ function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!supabase) {
+      setMessage('Supabase 未配置');
+      return;
+    }
+
     setIsLoading(true);
     setMessage('');
 
