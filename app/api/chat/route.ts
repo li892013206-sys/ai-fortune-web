@@ -56,7 +56,7 @@ const EXPERT_SYSTEM_PROMPT = `
  * 构建性格分析 Prompt
  */
 function buildPersonalityPrompt(name: string, gender: string, bazi: BaziEngineResult): string {
-  const { fourPillars, dayGan, dayGanWuxing, wuxingPercentage, strengthAnalysis, shishenStats } = bazi;
+  const { fourPillars, dayGan, dayGanWuxing, wuxingPercentage, strength, shishenStats } = bazi;
 
   return `
 请为 ${name}（${gender}）进行**性格特质分析**。
@@ -64,7 +64,7 @@ function buildPersonalityPrompt(name: string, gender: string, bazi: BaziEngineRe
 ## 八字数据
 - 四柱：${fourPillars.year.gan}${fourPillars.year.zhi}（年）、${fourPillars.month.gan}${fourPillars.month.zhi}（月）、${fourPillars.day.gan}${fourPillars.day.zhi}（日）、${fourPillars.hour.gan}${fourPillars.hour.zhi}（时）
 - 日主：${dayGan}（${dayGanWuxing}）
-- 日主强弱：${strengthAnalysis.level}（得分：${strengthAnalysis.score.toFixed(1)}）
+- 日主强弱：${strength.level}（得分：${strength.score.toFixed(1)}）
 - 月令：${fourPillars.month.zhi}（${fourPillars.month.zhiWuxing}）
 
 ## 五行分布（百分比）
@@ -107,7 +107,9 @@ ${Object.entries(shishenStats).map(([name, count]) => `- ${name}：${count.toFix
  * 构建事业分析 Prompt
  */
 function buildCareerPrompt(name: string, gender: string, bazi: BaziEngineResult): string {
-  const { fourPillars, dayGan, dayGanWuxing, strengthAnalysis, shishenStats, dayun } = bazi // 找出财星和官星
+  const { fourPillars, dayGan, dayGanWuxing, strength, shishenStats, dayun } = bazi;
+
+  // 找出财星和官星
   const caixing = Object.entries(shishenStats).filter(([name]) => name.includes('财')).map(([name, count]) => `${name}(${count.toFixed(1)})`).join('、') || '无';
   const guanxing = Object.entries(shishenStats).filter(([name]) => name.includes('官') || name.includes('杀')).map(([name, count]) => `${name}(${count.toFixed(1)})`).join('、') || '无';
 
@@ -116,9 +118,9 @@ function buildCareerPrompt(name: string, gender: string, bazi: BaziEngineResult)
 
 ## 八字数据
 - 四柱：${fourPillars.year.gan}${fourPillars.year.zhi}（年）、${fourPillars.month.gan}${fourPillars.month.zhi}（月）、${fourPillars.day.gan}${fourPillars.day.zhi}（日）、${fourPillars.hour.gan}${fourPillars.hour.zhi}（时）
-- 日主：${dayGan}（${dayGanWuxing}）- ${strengthAnalysis.level}
-- 喜用神：${strengthAnalysis.xiYongShen.join('、')}
-- 忌神：${strengthAnalysis.jiShen.join('、')}
+- 日主：${dayGan}（${dayGanWuxing}）- ${strength.level}
+- 喜用神：${strength.xiYongShen.join('、')}
+- 忌神：${strength.jiShen.join('、')}
 
 ## 事业相关十神
 - 财星：${caixing}
@@ -131,7 +133,8 @@ ${dayun.slice(0, 3).map(dy => `- ${dy.startAge}-${dy.endAge}岁：${dy.gan}${dy.
 ## 分析要求
 请从以下维度展开，**必须引用具体的干支和大运数据**：
 
-### 1. 职n- 基于喜用神${strengthAnalysis.xiYongShen.join('、')}推荐适合的五行行业
+### 1. 职业方向推荐
+- 基于喜用神${strength.xiYongShen.join('、')}推荐适合的五行行业
 - 结合十神配置分析职业类型（如食神多适合创意、技术类）
 - 明确指出哪些干支组合支持这些职业
 
