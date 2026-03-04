@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Calendar, Clock, Sparkles, Loader2, Sun, Save, LogIn, LogOut, History, X, Check, AlertCircle } from 'lucide-react';
+import { User, Calendar, Clock, Sparkles, Loader2, Sun, Save, LogIn, LogOut, History, X, Check, AlertCircle, MapPin } from 'lucide-react';
 import { calculateBaziEngine, BaziEngineResult } from '@/lib/baziEngine';
 import { supabase } from '@/lib/supabase';
 import { saveBaziRecord, getHistoryRecords, BaziRecord } from '@/lib/supabase-service';
@@ -24,13 +24,56 @@ interface TabState {
   error: string | null;
 }
 
-// 五行颜色映射
+// 五行颜色映射 - 清新淡雅
 const WUXING_COLORS: Record<string, string> = {
-  '木': 'text-green-400',
-  '火': 'text-red-400',
-  '土': 'text-yellow-400',
-  '金': 'text-gray-100',
-  '水': 'text-blue-400',
+  '木': 'text-emerald-300',
+  '火': 'text-rose-300',
+  '土': 'text-amber-200',
+  '金': 'text-slate-200',
+  '水': 'text-cyan-300',
+};
+
+// 五行背景色
+const WUXING_BG_COLORS: Record<string, string> = {
+  '木': 'bg-emerald-400/20',
+  '火': 'bg-rose-400/20',
+  '土': 'bg-amber-300/20',
+  '金': 'bg-slate-300/20',
+  '水': 'bg-cyan-400/20',
+};
+
+// 城市经度数据库（主要城市）
+const CITY_LONGITUDE: Record<string, number> = {
+  '北京': 116.4,
+  '上海': 121.5,
+  '广州': 113.3,
+  '深圳': 114.1,
+  '成都': 104.1,
+  '杭州': 120.2,
+  '重庆': 106.5,
+  '西安': 108.9,
+  '武汉': 114.3,
+  '南京': 118.8,
+  '天津': 117.2,
+  '苏州': 120.6,
+  '郑州': 113.6,
+  '长沙': 112.9,
+  '沈阳': 123.4,
+  '青岛': 120.4,
+  '济南': 117.0,
+  '哈尔滨': 126.6,
+  '福州': 119.3,
+  '厦门': 118.1,
+  '昆明': 102.7,
+  '兰州': 103.8,
+  '乌鲁木齐': 87.6,
+  '拉萨': 91.1,
+  '南宁': 108.3,
+  '贵阳': 106.7,
+  '太原': 112.5,
+  '石家庄': 114.5,
+  '南昌': 115.9,
+  '合肥': 117.3,
 };
 
 export default function ChatPage() {
