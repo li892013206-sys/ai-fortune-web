@@ -1,9 +1,27 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+let supabaseInstance: SupabaseClient | null = null;
 
-// 只在客户端或有环境变量时创建客户端
-export const supabase = (supabaseUrl && supabaseAnonKey)
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+export function getSupabase(): SupabaseClient | null {
+  if (supabaseInstance) {
+    return supabaseInstance;
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return null;
+  }
+
+  try {
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+    return supabaseInstance;
+  } catch (error) {
+    console.error('Failed to create Supabase client:', error);
+    return null;
+  }
+}
+
+// 为了向后兼容，导出一个 getter
+export const supabase = typeof window !== 'undefined' ? getSupabase() : null;
