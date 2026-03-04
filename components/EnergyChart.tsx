@@ -50,17 +50,17 @@ function analyzeWuxingPreference(wuxingScore: Record<string, number>, dayGanWuxi
 
   if (isDayGanStrong) {
     // 日主偏强，需要泄耗
-    const keWuxing = WUXING_SHENGKE[dayGanWuxing].ke; // 日主克的五行
+    const keWuxing = WUXING_SHENGKE[dayGanWuxing as keyof typeof WUXING_SHENGKE]?.ke; // 日主克的五行
     const shengWuxing = Object.entries(WUXING_SHENGKE).find(([_, v]) => v.sheng === dayGanWuxing)?.[0]; // 生日主的五行
 
-    xiShen = keWuxing;
+    xiShen = keWuxing || '';
     jiShen = shengWuxing || strongest;
 
     analysis = `命局五行${dayGanWuxing}偏旺，日主身强。宜泄耗，喜${keWuxing}来消耗能量。忌${jiShen}再生扶，以免过旺失衡。`;
   } else {
     // 日主偏弱，需要生扶
     const shengWuxing = Object.entries(WUXING_SHENGKE).find(([_, v]) => v.sheng === dayGanWuxing)?.[0]; // 生日主的五行
-    const keWuxing = WUXING_SHENGKE[dayGanWuxing].ke; // 日主克的五行
+    const keWuxing = WUXING_SHENGKE[dayGanWuxing as keyof typeof WUXING_SHENGKE]?.ke; // 日主克的五行
 
     xiShen = shengWuxing || dayGanWuxing;
     jiShen = Object.entries(WUXING_SHENGKE).find(([_, v]) => v.ke === dayGanWuxing)?.[0] || strongest;
