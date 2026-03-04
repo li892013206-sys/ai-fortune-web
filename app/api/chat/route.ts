@@ -1,7 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { calculateBaziEngine, BaziEngineResult } from '@/lib/baziEngine';
+import { BaziEngineResult } from '@/lib/baziEngine';
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
+// 使用 DeepSeek API
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || 'sk-dd5ae5973f594f7ebca2de1614f089ae';
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 export const runtime = 'edge';
 
@@ -288,67 +289,93 @@ export async function POST(req: Request) {
       );
     }
 
-    // 检查 API Key
-    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-    console.log('Gemini API Key 存在:', !!apiKey);
-    console.log('API Key 前10位:', apiKey?.substring(0, 10));
-
-    if (!apiKey) {
-      console.error('Gemini API Key 未配置');
-      return new Response(
-        JSON.stringify({ error: 'Gemini API Key 未配置' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
     // 构建专家 Prompt
     console.log('构建 Prompt...');
     const prompt = buildPromptByDimension(body.name, body.gender, body.baziData, body.dimension);
     console.log('Prompt 长度:', prompt.length);
 
-    // 初始化 Gemini 模型
-    console.log('初始化 Gemini 模型...');
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash-exp',
-      systemInstruction: EXPERT_SYSTEM_PROMPT,
+    // 调用 DeepSeek API
+    console.log('调用 DeepSeek API...');
+    const response = await fetch(DEEPSEEK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          {
+            role: 'system',
+            content: EXPERT_SYSTEM_PROMPT,
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 3000,
+        stream: true,
+      }),
     });
 
-    // 生成配置
-    const generationConfig = {
-      temperature: 0.7, // 降低温度，提高准确性
-      topP: 0.9,
-      topK: 40,
-      maxOutputTokens: 3000,
-    };
+    console.log('DeepSeek API 响应状态:', response.status);
 
-    // 开始对话
-    console.log('开始对话...');
-    const chat = model.startChat({
-      generationConfig,
-      history: [],
-    });
-
-    // 发送用户 prompt
-    console.log('发送消息流...');
-    const result = await chat.sendMessageStream(prompt);
-    console.log('消息流已启动');
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('DeepSeek API 错误:', errorText);
+      return new Response(
+        JSON.stringify({ error: 'DeepSeek API 请求失败', details: errorText }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // 创建流式响应
+    console.log('开始流式传输...');
     const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          console.log('开始流式传输...');
-          let chunkCount = 0;
-          for await (const chunk of result.stream) {
-            const text = chunk.text();
-            chunkCount++;
-            if (chunkCount <= 3) {
-              console.log(`Chunk ${chunkCount}:`, text.substring(0, 50));
-            }
-            controller.enqueue(encoder.encode(text));
+          const reader = response.body?.getReader();
+          if (!reader) {
+            throw new Error('无法获取响应流');
           }
-          console.log(`流式传输完成，共 ${chunkCount} 个块`);
+
+          let buffer = '';
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              console.log('流式传输完成');
+              break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6);
+                if (data === '[DONE]') {
+                  continue;
+                }
+
+                try {
+                  const json = JSON.parse(data);
+                  const content = json.choices?.[0]?.delta?.content;
+                  if (content) {
+                    controller.enqueue(encoder.encode(content));
+                  }
+                } catch (e) {
+                  console.error('解析 SSE 数据失败:', e);
+                }
+              }
+            }
+          }
+
           controller.close();
         } catch (error) {
           console.error('Stream error:', error);
