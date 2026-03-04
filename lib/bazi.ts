@@ -236,22 +236,22 @@ function checkDeLing(dayGanWuxing: string, monthZhi: string): { deLing: boolean;
   }
 
   // 月令生日主（次强）
-  if (WUXING_RELATION.生[monthWuxing] === dayGanWuxing) {
+  if (WUXING_RELATION.生[monthWuxing as keyof typeof WUXING_RELATION.生] === dayGanWuxing) {
     return { deLing: true, score: 2.5, reason: `月令${monthZhi}为${monthWuxing}，生扶日主${dayGanWuxing}，得令` };
   }
 
   // 月令克日主（失令）
-  if (WUXING_RELATION.克[monthWuxing] === dayGanWuxing) {
+  if (WUXING_RELATION.克[monthWuxing as keyof typeof WUXING_RELATION.克] === dayGanWuxing) {
     return { deLing: false, score: -2.0, reason: `月令${monthZhi}为${monthWuxing}，克制日主${dayGanWuxing}，失令` };
   }
 
   // 日主克月令（耗泄）
-  if (WUXING_RELATION.克[dayGanWuxing] === monthWuxing) {
+  if (WUXING_RELATION.克[dayGanWuxing as keyof typeof WUXING_RELATION.克] === monthWuxing) {
     return { deLing: false, score: -1.0, reason: `日主${dayGanWuxing}克月令${monthWuxing}，耗泄，不得令` };
   }
 
   // 日主生月令（泄气）
-  if (WUXING_RELATION.生[dayGanWuxing] === monthWuxing) {
+  if (WUXING_RELATION.生[dayGanWuxing as keyof typeof WUXING_RELATION.生] === monthWuxing) {
     return { deLing: false, score: -1.5, reason: `日主${dayGanWuxing}生月令${monthWuxing}，泄气，不得令` };
   }
 
@@ -315,7 +315,7 @@ function checkDeSheng(dayGanWuxing: string, pillars: BaZiPillar[], shiShenAnalys
     const pillarName = ['年', '月', '日', '时'][index];
 
     // 检查天干印星
-    if (WUXING_RELATION.生[pillar.ganWuxing] === dayGanWuxing) {
+    if (WUXING_RELATION.生[pillar.ganWuxing as keyof typeof WUXING_RELATION.生] === dayGanWuxing) {
       const ganScore = index === 1 ? 2.0 : 1.5; // 月干印星力量最大
       score += ganScore;
       reasons.push(`${pillarName}干${pillar.gan}（${pillar.ganWuxing}）生日主（+${ganScore}）`);
@@ -324,7 +324,7 @@ function checkDeSheng(dayGanWuxing: string, pillars: BaZiPillar[], shiShenAnalys
     // 检查地支藏干印星
     pillar.cangGan.forEach((gan, cangIndex) => {
       const ganWuxing = WUXING_MAP[gan];
-      if (ganWuxing && WUXING_RELATION.生[ganWuxing] === dayGanWuxing) {
+      if (ganWuxing && WUXING_RELATION.生[ganWuxing as keyof typeof WUXING_RELATION.生] === dayGanWuxing) {
         const weight = CANGGAN_WEIGHT[pillar.zhi]?.[cangIndex] || 0.1;
         const cangScore = weight * 1.0;
         score += cangScore;
@@ -424,7 +424,7 @@ function analyzeRiZhuStrength(
     // 身强：喜克泄耗，忌生扶
     // 喜：官杀（克）、食伤（泄）、财星（耗）
     const keWuxing = Object.entries(WUXING_RELATION.克).find(([_, v]) => v === dayGanWuxing)?.[0];
-    const xieWuxing = WUXING_RELATION.生[dayGanWuxing];
+    const xieWuxing = WUXING_RELATION.生[dayGanWuxing as keyof typeof WUXING_RELATION.生];
     const haoWuxing = Object.entries(WUXING_RELATION.克).find(([k, _]) => k === dayGanWuxing)?.[1];
 
     if (keWuxing) xiYongShen.push(keWuxing); // 官杀
@@ -445,7 +445,7 @@ function analyzeRiZhuStrength(
 
     // 忌：官杀（克）、食伤（泄）、财星（耗）
     const keWuxing = Object.entries(WUXING_RELATION.克).find(([_, v]) => v === dayGanWuxing)?.[0];
-    const xieWuxing = WUXING_RELATION.生[dayGanWuxing];
+    const xieWuxing = WUXING_RELATION.生[dayGanWuxing as keyof typeof WUXING_RELATION.生];
     const haoWuxing = Object.entries(WUXING_RELATION.克).find(([k, _]) => k === dayGanWuxing)?.[1];
 
     if (keWuxing) jiShen.push(keWuxing); // 官杀
