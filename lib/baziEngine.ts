@@ -746,20 +746,20 @@ export function calculateBaziEngine(
   const lunar = solar.getLunar();
   const baZi = lunar.getEightChar();
 
-  // 获取四柱干支
-  const yearGanZhi = baZi.getYearGanZhi();
-  const monthGanZhi = baZi.getMonthGanZhi();
-  const dayGanZhi = baZi.getDayGanZhi();
-  const hourGanZhi = baZi.getTimeGanZhi();
+  // 获取四柱干支（使用正确的方法）
+  const yearGanZhi = baZi.getYearGan() + baZi.getYearZhi();
+  const monthGanZhi = baZi.getMonthGan() + baZi.getMonthZhi();
+  const dayGanZhi = baZi.getDayGan() + baZi.getDayZhi();
+  const hourGanZhi = baZi.getTimeGan() + baZi.getTimeZhi();
 
-  const yearGan = yearGanZhi.charAt(0);
-  const yearZhi = yearGanZhi.charAt(1);
-  const monthGan = monthGanZhi.charAt(0);
-  const monthZhi = monthGanZhi.charAt(1);
-  const dayGan = dayGanZhi.charAt(0);
-  const dayZhi = dayGanZhi.charAt(1);
-  const hourGan = hourGanZhi.charAt(0);
-  const hourZhi = hourGanZhi.charAt(1);
+  const yearGan = baZi.getYearGan();
+  const yearZhi = baZi.getYearZhi();
+  const monthGan = baZi.getMonthGan();
+  const monthZhi = baZi.getMonthZhi();
+  const dayGan = baZi.getDayGan();
+  const dayZhi = baZi.getDayZhi();
+  const hourGan = baZi.getTimeGan();
+  const hourZhi = baZi.getTimeZhi();
 
   // 构建四柱
   const createPillar = (gan: string, zhi: string, nayin: string): BaziPillar => {
