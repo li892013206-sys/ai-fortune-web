@@ -176,8 +176,8 @@ function getZhiWuxing(zhi: string): string {
 /**
  * 计算五行得分（考虑月令权重）
  */
-function calculateWuxingScore(pillars: BaZiPillar[], monthZhi: string): Record<string, number> {
-  const score: Record<string, number> = {
+function calculateWuxingScore(pillars: BaZiPillar[], monthZhi: string): { 金: number; 木: number; 水: number; 火: number; 土: number } {
+  const score: { 金: number; 木: number; 水: number; 火: number; 土: number } = {
     '金': 0,
     '木': 0,
     '水': 0,
