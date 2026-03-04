@@ -438,9 +438,9 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#E2E8F0] relative">
+    <div className="min-h-screen bg-[#0a0f1a] text-[#E2E8F0] relative">
       {/* 顶部装饰线 */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#B67D43] to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-slate-400/30 to-transparent" />
 
       {/* 历史侧边栏 */}
       <HistorySidebar
@@ -461,14 +461,14 @@ export default function ChatPage() {
           {/* 历史按钮 */}
           <button
             onClick={() => setShowHistory(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-black/50 hover:bg-black/70 text-gray-400 hover:text-[#B67D43] rounded transition-all border border-gray-800"
+            className="flex items-center gap-2 px-4 py-2 bg-black/50 hover:bg-black/70 text-gray-400 hover:text-slate-200 rounded transition-all border border-gray-800"
           >
             <History className="w-4 h-4" />
             历史档案
           </button>
 
           <div className="text-center flex-1">
-            <h1 className="text-3xl font-bold text-[#B67D43] mb-1">
+            <h1 className="text-3xl font-bold text-slate-200 mb-1">
               专业命理指挥中心
             </h1>
             <p className="text-gray-500 text-sm">Professional Bazi Analysis System</p>
@@ -492,7 +492,7 @@ export default function ChatPage() {
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#B67D43]/20 hover:bg-[#B67D43]/30 text-[#B67D43] rounded transition-all border border-[#B67D43]/50"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-400/20/20 hover:bg-slate-400/20/30 text-slate-200 rounded transition-all border border-white/10/50"
               >
                 <LogIn className="w-4 h-4" />
                 登录
@@ -505,7 +505,7 @@ export default function ChatPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-black/40 backdrop-blur-xl rounded-lg p-4 mb-6 border border-[#B67D43]/20"
+          className="bg-black/40 backdrop-blur-xl rounded-lg p-4 mb-6 border border-white/10/20"
         >
           <div className="flex items-center gap-4">
             {/* 姓名 */}
@@ -514,7 +514,7 @@ export default function ChatPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#B67D43] transition-colors"
+                className="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/10 transition-colors"
                 placeholder="姓名"
               />
             </div>
@@ -525,7 +525,7 @@ export default function ChatPage() {
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B67D43] transition-colors"
+                className="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-white/10 transition-colors"
               />
             </div>
 
@@ -535,7 +535,7 @@ export default function ChatPage() {
                 type="time"
                 value={birthTime}
                 onChange={(e) => setBirthTime(e.target.value)}
-                className="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B67D43] transition-colors"
+                className="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-white/10 transition-colors"
               />
             </div>
 
@@ -545,7 +545,7 @@ export default function ChatPage() {
                 onClick={() => setGender('男')}
                 className={`px-4 py-2 rounded text-sm font-medium transition-all ${
                   gender === '男'
-                    ? 'bg-[#B67D43] text-white'
+                    ? 'bg-slate-400/20 text-white'
                     : 'bg-black/50 text-gray-400 hover:bg-black/70'
                 }`}
               >
@@ -555,7 +555,7 @@ export default function ChatPage() {
                 onClick={() => setGender('女')}
                 className={`px-4 py-2 rounded text-sm font-medium transition-all ${
                   gender === '女'
-                    ? 'bg-[#B67D43] text-white'
+                    ? 'bg-slate-400/20 text-white'
                     : 'bg-black/50 text-gray-400 hover:bg-black/70'
                 }`}
               >
@@ -569,7 +569,7 @@ export default function ChatPage() {
                 onClick={() => setUseSolarTime(!useSolarTime)}
                 className={`flex items-center gap-1 px-3 py-2 rounded text-sm transition-all ${
                   useSolarTime
-                    ? 'bg-[#B67D43]/20 text-[#B67D43] border border-[#B67D43]/50'
+                    ? 'bg-slate-400/20/20 text-slate-200 border border-white/10/50'
                     : 'bg-black/50 text-gray-400 border border-gray-700'
                 }`}
               >
@@ -581,7 +581,7 @@ export default function ChatPage() {
                   type="number"
                   value={longitude}
                   onChange={(e) => setLongitude(e.target.value)}
-                  className="w-20 bg-black/50 border border-gray-700 rounded px-2 py-2 text-sm text-white focus:outline-none focus:border-[#B67D43]"
+                  className="w-20 bg-black/50 border border-gray-700 rounded px-2 py-2 text-sm text-white focus:outline-none focus:border-white/10"
                   placeholder="经度"
                 />
               )}
@@ -690,7 +690,7 @@ export default function ChatPage() {
             animate={{ opacity: 1 }}
             className="text-center py-32"
           >
-            <Sparkles className="w-20 h-20 text-[#B67D43] mx-auto mb-4 opacity-50" />
+            <Sparkles className="w-20 h-20 text-slate-200 mx-auto mb-4 opacity-50" />
             <p className="text-gray-600">填写信息，开启专业命理分析</p>
           </motion.div>
         )}
@@ -714,8 +714,8 @@ function BaziPillarsCard({ baziResult }: { baziResult: BaziEngineResult }) {
   ];
 
   return (
-    <div className="bg-black/40 backdrop-blur-xl rounded-lg p-6 border border-[#B67D43]/20">
-      <h3 className="text-lg font-semibold text-[#B67D43] mb-4">四柱八字</h3>
+    <div className="bg-black/40 backdrop-blur-xl rounded-lg p-6 border border-white/10/20">
+      <h3 className="text-lg font-semibold text-slate-200 mb-4">四柱八字</h3>
       <div className="grid grid-cols-4 gap-4">
         {pillars.map(({ name, pillar }) => (
           <div key={name} className="text-center">
@@ -747,8 +747,8 @@ function FiveElementsRadarCard({ baziResult }: { baziResult: BaziEngineResult })
   ];
 
   return (
-    <div className="bg-black/40 backdrop-blur-xl rounded-lg p-6 border border-[#B67D43]/20">
-      <h3 className="text-lg font-semibold text-[#B67D43] mb-4">五行分布</h3>
+    <div className="bg-black/40 backdrop-blur-xl rounded-lg p-6 border border-white/10/20">
+      <h3 className="text-lg font-semibold text-slate-200 mb-4">五行分布</h3>
       <div className="space-y-3">
         {elements.map((el) => (
           <div key={el.name}>
@@ -775,8 +775,8 @@ function FiveElementsRadarCard({ baziResult }: { baziResult: BaziEngineResult })
 /** 刑冲合害列表卡片 */
 function RelationTableCard({ baziResult }: { baziResult: BaziEngineResult }) {
   return (
-    <div className="bg-black/40 backdrop-blur-xl rounded-lg p-6 border border-[#B67D43]/20">
-      <h3 className="text-lg font-semibold text-[#B67D43] mb-4">刑冲合害</h3>
+    <div className="bg-black/40 backdrop-blur-xl rounded-lg p-6 border border-white/10/20">
+      <h3 className="text-lg font-semibold text-slate-200 mb-4">刑冲合害</h3>
       <div className="space-y-2 max-h-64 overflow-y-auto">
         {baziResult.xingchong.length === 0 ? (
           <p className="text-gray-600 text-sm">无明显刑冲关系</p>
@@ -787,7 +787,7 @@ function RelationTableCard({ baziResult }: { baziResult: BaziEngineResult }) {
               className="bg-black/40 rounded p-3 border border-gray-800 text-sm"
             >
               <div className="flex items-center gap-2 mb-1">
-                <span className="px-2 py-0.5 bg-[#B67D43]/20 text-[#B67D43] rounded text-xs">
+                <span className="px-2 py-0.5 bg-slate-400/20/20 text-slate-200 rounded text-xs">
                   {rel.type}
                 </span>
                 <span className="text-gray-400">{rel.positions.join(' - ')}</span>
@@ -820,7 +820,7 @@ function ChatWindowCard({
   const currentTab = tabStates[activeTab];
 
   return (
-    <div className="bg-black/40 backdrop-blur-xl rounded-lg border border-[#B67D43]/20 h-[calc(100vh-200px)] flex flex-col">
+    <div className="bg-black/40 backdrop-blur-xl rounded-lg border border-white/10/20 h-[calc(100vh-200px)] flex flex-col">
       {/* 标签页 */}
       <div className="flex border-b border-gray-800">
         {tabs.map((tab) => (
@@ -829,7 +829,7 @@ function ChatWindowCard({
             onClick={() => onTabChange(tab.key)}
             className={`flex-1 py-3 text-sm font-medium transition-all relative ${
               activeTab === tab.key
-                ? 'text-[#B67D43]'
+                ? 'text-slate-200'
                 : 'text-gray-500 hover:text-gray-300'
             }`}
           >
@@ -838,7 +838,7 @@ function ChatWindowCard({
             {/* 加载指示器 */}
             {tabStates[tab.key].isLoading && (
               <span className="absolute top-2 right-2">
-                <Loader2 className="w-3 h-3 animate-spin text-[#B67D43]" />
+                <Loader2 className="w-3 h-3 animate-spin text-slate-200" />
               </span>
             )}
 
@@ -853,7 +853,7 @@ function ChatWindowCard({
             {activeTab === tab.key && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#B67D43]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-slate-400/20"
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
             )}
@@ -902,7 +902,7 @@ function ChatWindowCard({
               <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {currentTab.content}
                 {currentTab.isLoading && (
-                  <span className="inline-block w-2 h-4 bg-[#B67D43] animate-pulse ml-1" />
+                  <span className="inline-block w-2 h-4 bg-slate-400/20 animate-pulse ml-1" />
                 )}
               </div>
             </motion.div>
@@ -945,7 +945,7 @@ function FluidLoadingAnimation() {
 
       {/* 中圈旋转 */}
       <motion.div
-        className="absolute inset-4 rounded-full border-2 border-[#B67D43]/50"
+        className="absolute inset-4 rounded-full border-2 border-white/10/50"
         animate={{
           rotate: 360,
         }}
@@ -1037,10 +1037,10 @@ function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-[#0A0A0A] border border-[#B67D43]/30 rounded-xl p-8 w-full max-w-md"
+        className="bg-[#0A0A0A] border border-white/10/30 rounded-xl p-8 w-full max-w-md"
       >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-[#B67D43]">
+          <h2 className="text-2xl font-bold text-slate-200">
             {isSignUp ? '注册账号' : '登录账号'}
           </h2>
           <button
@@ -1059,7 +1059,7 @@ function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#B67D43] transition-colors"
+              className="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/10 transition-colors"
               placeholder="your@email.com"
             />
           </div>
@@ -1072,7 +1072,7 @@ function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#B67D43] transition-colors"
+              className="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/10 transition-colors"
               placeholder="••••••••"
             />
           </div>
@@ -1111,7 +1111,7 @@ function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
               setIsSignUp(!isSignUp);
               setMessage('');
             }}
-            className="text-sm text-gray-400 hover:text-[#B67D43] transition-colors"
+            className="text-sm text-gray-400 hover:text-slate-200 transition-colors"
           >
             {isSignUp ? '已有账号？立即登录' : '没有账号？立即注册'}
           </button>
@@ -1155,13 +1155,13 @@ function HistorySidebar({
         animate={{ x: 0 }}
         exit={{ x: -320 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed left-0 top-0 bottom-0 w-80 bg-[#0A0A0A] border-r border-[#B67D43]/20 z-50 flex flex-col"
+        className="fixed left-0 top-0 bottom-0 w-80 bg-[#0A0A0A] border-r border-white/10/20 z-50 flex flex-col"
       >
         {/* 头部 */}
         <div className="flex items-center justify-between p-6 border-b border-gray-800">
           <div className="flex items-center gap-2">
-            <History className="w-5 h-5 text-[#B67D43]" />
-            <h2 className="text-lg font-semibold text-[#B67D43]">历史档案</h2>
+            <History className="w-5 h-5 text-slate-200" />
+            <h2 className="text-lg font-semibold text-slate-200">历史档案</h2>
           </div>
           <button
             onClick={onClose}
@@ -1175,7 +1175,7 @@ function HistorySidebar({
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-[#B67D43]" />
+              <Loader2 className="w-6 h-6 animate-spin text-slate-200" />
             </div>
           ) : records.length === 0 ? (
             <div className="text-center py-12 text-gray-600">
@@ -1189,11 +1189,11 @@ function HistorySidebar({
                 onClick={() => onSelectRecord(record)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-black/40 hover:bg-black/60 border border-gray-800 hover:border-[#B67D43]/50 rounded-lg p-4 text-left transition-all group"
+                className="w-full bg-black/40 hover:bg-black/60 border border-gray-800 hover:border-white/10/50 rounded-lg p-4 text-left transition-all group"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <h3 className="text-white font-medium group-hover:text-[#B67D43] transition-colors">
+                    <h3 className="text-white font-medium group-hover:text-slate-200 transition-colors">
                       {record.name}
                     </h3>
                     <p className="text-xs text-gray-500 mt-1">
@@ -1211,7 +1211,7 @@ function HistorySidebar({
                       minute: '2-digit',
                     })}
                   </span>
-                  <span className="text-[#B67D43] opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity">
                     点击查看 →
                   </span>
                 </div>
