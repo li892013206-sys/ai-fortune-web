@@ -305,41 +305,6 @@ export default function ChatPage() {
       console.log(`${dimension} 请求标记已移除`);
     }
   };
-          fullContent += chunk;
-
-          // 实时更新内容
-          setTabStates(prev => ({
-            ...prev,
-            [dimension]: { ...prev[dimension], content: fullContent },
-          }));
-        }
-
-        // 标记为加载完成
-        setTabStates(prev => ({
-          ...prev,
-          [dimension]: { isLoading: false, isLoaded: true, content: fullContent, error: null },
-        }));
-      }
-    } catch (error) {
-      console.error(`${dimension} 分析失败:`, error);
-      setTabStates(prev => ({
-        ...prev,
-        [dimension]: {
-          isLoading: false,
-          isLoaded: false,
-          content: '',
-          error: error instanceof Error ? error.message : '分析失败，请重试',
-        },
-      }));
-    } finally {
-      // 移除请求标记
-      setOngoingRequests(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(dimension);
-        return newSet;
-      });
-    }
-  };
 
   // 切换标签页时，按需加载
   const handleTabChange = async (tab: AnalysisTab) => {
