@@ -107,40 +107,62 @@ export default function ChatPage() {
 
   // 处理八字分析
   const handleAnalyze = async () => {
+    console.log('=== 开始分析 ===');
+    console.log('姓名:', name);
+    console.log('性别:', gender);
+    console.log('出生日期:', birthDate);
+    console.log('出生时间:', birthTime);
+    console.log('使用真太阳时:', useSolarTime);
+    console.log('经度:', longitude);
+
     if (!name || !birthDate || !birthTime) {
+      console.error('信息不完整');
       alert('请填写完整信息');
       return;
     }
 
-    const [year, month, day] = birthDate.split('-').map(Number);
-    const [hour, minute] = birthTime.split(':').map(Number);
+    try {
+      const [year, month, day] = birthDate.split('-').map(Number);
+      const [hour, minute] = birthTime.split(':').map(Number);
+      console.log('解析后的日期时间:', { year, month, day, hour, minute });
 
-    // 计算八字
-    const result = calculateBaziEngine(
-      year,
-      month,
-      day,
-      hour,
-      minute || 0,
-      gender,
-      useSolarTime ? parseFloat(longitude) : undefined
-    );
-    setBaziResult(result);
+      // 计算八字
+      console.log('开始计算八字...');
+      const result = calculateBaziEngine(
+        year,
+        month,
+        day,
+        hour,
+        minute || 0,
+        gender,
+        useSolarTime ? parseFloat(longitude) : undefined
+      );
+      console.log('八字计算结果:', result);
+      setBaziResult(result);
 
-    // 重置所有标签页状态
-    setTabStates({
-      personality: { isLoading: false, isLoaded: false, content: '', error: null },
-      career: { isLoading: false, isLoaded: false, content: '', error: null },
-      relationship: { isLoading: false, isLoaded: false, content: '', error: null },
-    });
-    setOngoingRequests(new Set());
+      // 重置所有标签页状态
+      console.log('重置标签页状态...');
+      setTabStates({
+        personality: { isLoading: false, isLoaded: false, content: '', error: null },
+        career: { isLoading: false, isLoaded: false, content: '', error: null },
+        relationship: { isLoading: false, isLoaded: false, content: '', error: null },
+      });
+      setOngoingRequests(new Set());
 
-    // 自动分析第一个标签页（性格）
-    await analyzeDimension('personality', result);
+      // 自动分析第一个标签页（性格）
+      console.log('开始分析性格维度...');
+      await analyzeDimension('personality', result);
+      console.log('=== 分析完成 ===');
+    } catch (error) {
+      console.error('分析过程出错:', error);
+      alert('分析失败: ' + (error instanceof Error ? error.message : '未知错误'));
+    }
   };
 
   // 分析指定维度
   const analyzeDimension = async (dimension: AnalysisTab, bazi: BaziEngineResult) => {
+    console.log(`\n=== 分析维度: ${dimension} ===`);
+
     // 并发控制：如果该维度正在请求中，直接返回
     if (ongoingRequests.has(dimension)) {
       console.log(`${dimension} 正在请求中，跳过重复请求`);
@@ -155,14 +177,20 @@ export default function ChatPage() {
 
     // 标记为正在请求
     setOngoingRequests(prev => new Set(prev).add(dimension));
+    console.log('标记为正在请求');
 
     // 更新状态：开始加载
     setTabStates(prev => ({
       ...prev,
       [dimension]: { ...prev[dimension], isLoading: true, error: null },
     }));
+    console.log('更新状态为加载中');
 
     try {
+      console.log('准备发送 API 请求...');
+      console.log('请求数据:', { name, gender, dimension });
+      console.log('八字数据:', bazi);
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -174,18 +202,66 @@ export default function ChatPage() {
         }),
       });
 
-      if (!response.ok) throw new Error('API 请求失败');
+      console.log('API 响应状态:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API 错误响应:', errorText);
+        throw new Error(`API 请求失败: ${response.status} ${errorText}`);
+      }
 
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let fullContent = '';
 
+      console.log('开始读取流式响应...');
+
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
+          if (done) {
+            console.log('流式响应读取完成');
+            break;
+          }
 
           const chunk = decoder.decode(value);
+          fullContent += chunk;
+
+          // 实时更新内容
+          setTabStates(prev => ({
+            ...prev,
+            [dimension]: { ...prev[dimension], content: fullContent },
+          }));
+        }
+      }
+
+      console.log(`${dimension} 分析完成，内容长度:`, fullContent.length);
+
+      // 标记为已加载
+      setTabStates(prev => ({
+        ...prev,
+        [dimension]: { ...prev[dimension], isLoading: false, isLoaded: true },
+      }));
+    } catch (error) {
+      console.error(`${dimension} 分析失败:`, error);
+      setTabStates(prev => ({
+        ...prev,
+        [dimension]: {
+          ...prev[dimension],
+          isLoading: false,
+          error: error instanceof Error ? error.message : '未知错误',
+        },
+      }));
+    } finally {
+      // 移除请求标记
+      setOngoingRequests(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(dimension);
+        return newSet;
+      });
+      console.log(`${dimension} 请求标记已移除`);
+    }
+  };
           fullContent += chunk;
 
           // 实时更新内容

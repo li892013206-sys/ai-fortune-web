@@ -273,21 +273,41 @@ function buildPromptByDimension(name: string, gender: string, bazi: BaziEngineRe
 }
 
 export async function POST(req: Request) {
+  console.log('=== API /api/chat 收到请求 ===');
+
   try {
     const body: BaziRequest = await req.json();
+    console.log('请求体:', JSON.stringify(body, null, 2));
 
     // 验证必填字段
     if (!body.name || !body.gender || !body.baziData || !body.dimension) {
+      console.error('缺少必填字段');
       return new Response(
         JSON.stringify({ error: '缺少必填字段：姓名、性别、八字数据、分析维度' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
+    // 检查 API Key
+    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    console.log('Gemini API Key 存在:', !!apiKey);
+    console.log('API Key 前10位:', apiKey?.substring(0, 10));
+
+    if (!apiKey) {
+      console.error('Gemini API Key 未配置');
+      return new Response(
+        JSON.stringify({ error: 'Gemini API Key 未配置' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // 构建专家 Prompt
+    console.log('构建 Prompt...');
     const prompt = buildPromptByDimension(body.name, body.gender, body.baziData, body.dimension);
+    console.log('Prompt 长度:', prompt.length);
 
     // 初始化 Gemini 模型
+    console.log('初始化 Gemini 模型...');
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.0-flash-exp',
       systemInstruction: EXPERT_SYSTEM_PROMPT,
@@ -302,23 +322,33 @@ export async function POST(req: Request) {
     };
 
     // 开始对话
+    console.log('开始对话...');
     const chat = model.startChat({
       generationConfig,
       history: [],
     });
 
     // 发送用户 prompt
+    console.log('发送消息流...');
     const result = await chat.sendMessageStream(prompt);
+    console.log('消息流已启动');
 
     // 创建流式响应
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
         try {
+          console.log('开始流式传输...');
+          let chunkCount = 0;
           for await (const chunk of result.stream) {
             const text = chunk.text();
+            chunkCount++;
+            if (chunkCount <= 3) {
+              console.log(`Chunk ${chunkCount}:`, text.substring(0, 50));
+            }
             controller.enqueue(encoder.encode(text));
           }
+          console.log(`流式传输完成，共 ${chunkCount} 个块`);
           controller.close();
         } catch (error) {
           console.error('Stream error:', error);
@@ -327,6 +357,7 @@ export async function POST(req: Request) {
       },
     });
 
+    console.log('返回流式响应');
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
